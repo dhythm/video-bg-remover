@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video Background Remover</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workbench" aria-label="Video background remover">
+        <header class="masthead">
+          <div>
+            <p class="eyebrow">Local ffmpeg alpha export</p>
+            <h1>Video Background Remover</h1>
+          </div>
+          <div class="status-pill" id="ffmpegStatus">Ready</div>
+        </header>
+
+        <div class="layout">
+          <section class="preview-panel">
+            <div class="viewer-topline">
+              <div>
+                <span class="label">Real-time Preview</span>
+                <strong id="videoName">No video selected</strong>
+              </div>
+              <span id="videoMeta">--</span>
+            </div>
+
+            <div class="preview-stage" id="dropZone">
+              <canvas id="previewCanvas" width="1280" height="720" aria-label="Processed preview"></canvas>
+              <div class="empty-state" id="emptyState">
+                <span>Drop a video here</span>
+                <button class="ghost-button" id="pickButton" type="button">Choose video</button>
+              </div>
+            </div>
+
+            <video id="sourceVideo" muted playsinline controls></video>
+
+            <div class="timeline">
+              <span id="currentTime">00:00</span>
+              <input id="scrubber" type="range" min="0" max="1000" value="0" disabled aria-label="Timeline">
+              <span id="durationTime">00:00</span>
+            </div>
+          </section>
+
+          <aside class="control-panel" aria-label="Export controls">
+            <input id="fileInput" class="file-input" type="file" accept="video/*">
+
+            <div class="field">
+              <span class="field-label">Background</span>
+              <div class="segmented" role="radiogroup" aria-label="Background color">
+                <label>
+                  <input type="radio" name="background" value="white">
+                  <span><i class="swatch white"></i>White</span>
+                </label>
+                <label>
+                  <input type="radio" name="background" value="black">
+                  <span><i class="swatch black"></i>Black</span>
+                </label>
+                <label>
+                  <input type="radio" name="background" value="green" checked>
+                  <span><i class="swatch green"></i>Green</span>
+                </label>
+              </div>
+            </div>
+
+            <label class="slider-row">
+              <span>Tolerance <output id="toleranceValue">24</output></span>
+              <input id="tolerance" type="range" min="1" max="100" value="24">
+            </label>
+
+            <label class="slider-row">
+              <span>Edge feather <output id="featherValue">8</output></span>
+              <input id="feather" type="range" min="0" max="100" value="8">
+            </label>
+
+            <label class="slider-row">
+              <span>Despill <output id="despillValue">45</output></span>
+              <input id="despill" type="range" min="0" max="100" value="45">
+            </label>
+
+            <label class="field">
+              <span class="field-label">Export frame rate</span>
+              <select id="fps">
+                <option value="23.976">23.976 fps</option>
+                <option value="24">24 fps</option>
+                <option value="25">25 fps</option>
+                <option value="29.97">29.97 fps</option>
+                <option value="30" selected>30 fps</option>
+                <option value="50">50 fps</option>
+                <option value="59.94">59.94 fps</option>
+                <option value="60">60 fps</option>
+              </select>
+            </label>
+
+            <button class="export-button" id="exportButton" type="button" disabled>Export ProRes 4444 MOV</button>
+
+            <div class="progress-box" aria-live="polite">
+              <div class="progress-copy">
+                <strong id="jobStage">Waiting for video</strong>
+                <span id="jobPercent">0%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <p id="jobDetail">No frames are cached in the browser; preview uses only the current canvas frame.</p>
+            </div>
+
+            <details class="log-box">
+              <summary>ffmpeg log</summary>
+              <pre id="ffmpegLog"></pre>
+            </details>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
